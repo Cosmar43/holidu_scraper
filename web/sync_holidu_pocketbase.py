@@ -30,7 +30,7 @@ CAMPOS_HOLIDU = [
     "fianza", "fianza_gestiona", "canal", "fecha_reserva",
 ]
 
-# Campos que se rellenan a mano desde el panel (o desde el agente). El sync
+# Campos que se rellenan a mano desde el panel (o desde una integracion). El sync
 # nunca los toca: no aparecen en el diccionario que se manda en el PATCH.
 CAMPOS_MANUALES = [
     "formulario", "fianza_estado", "fianza_retenido", "fianza_nota",
@@ -39,8 +39,8 @@ CAMPOS_MANUALES = [
 # Coleccion 'notas': detalles sobre un huesped que interesan si vuelve a
 # reservar. No viven en 'reservas' porque van pegadas al HUESPED, no a la
 # estancia: la clave es su telefono normalizado, asi que la nota que se escribe
-# hoy aparece sola en la reserva que haga el año que viene. Ver notas.php en el
-# panel y agente/app/notas.py.
+# hoy aparece sola en la reserva que haga el año que viene. Ver
+# includes/notas.php.
 CAMPOS_NOTAS = [
     "huesped_clave", "huesped_nombre", "id_reserva", "texto", "origen",
 ]
@@ -236,8 +236,7 @@ def get_holidu_bookings():
                 canal = d_data.get('distributionPartner') or ""
                 # Cuando se hizo la reserva. Holidu la da en ISO con su huso
                 # ("2025-11-30T22:02:28+01:00") y se guarda tal cual: es lo que
-                # pinta el panel y lo que ordena al agente para saber cuales son
-                # las mas recientes.
+                # pinta el panel y permite saber cuales son las mas recientes.
                 fecha_reserva = d_data.get('dateOfBooking') or ""
 
             customer = b.get('customer', {})
@@ -317,11 +316,10 @@ def ensure_collection_exists(token):
                 for nombre in CAMPOS_HOLIDU + CAMPOS_MANUALES
             ]
             # Las cinco reglas a None = solo superusuario, igual que 'notas'.
-            # Nacio con "" (abierto a cualquiera sin autenticarse) y asi estuvo
-            # hasta el 2026-08-22, sirviendo nombres, telefonos y correos de los
-            # huespedes a toda la LAN por el puerto 8091. El panel, el agente y
-            # este mismo script entran como superusuario, asi que no necesitan
-            # el acceso anonimo para nada.
+            # Con "" cualquiera que llegue a PocketBase leeria nombres,
+            # telefonos y correos de los huespedes sin autenticarse. El panel y
+            # este script entran como superusuario, asi que no necesitan el
+            # acceso anonimo para nada.
             payload = {
                 "name": "reservas",
                 "type": "base",
@@ -383,11 +381,8 @@ def asegurar_campos(token):
 def asegurar_coleccion_notas(token):
     """Crea la coleccion 'notas' si no existe. Idempotente.
 
-    A diferencia de 'reservas', nace con las cinco reglas de acceso en None, o
-    sea SOLO superusuario. 'reservas' las tiene en "" (abiertas) de cuando se
-    creo, y eso significa que cualquiera en la LAN la lee sin autenticarse; aqui
-    no se repite el error. El panel y el agente entran como superusuario, asi
-    que no les estorba.
+    Nace con las cinco reglas de acceso en None, o sea SOLO superusuario, igual
+    que 'reservas'. El panel entra como superusuario, asi que no le estorba.
 
     'creado' y 'actualizado' son campos autodate: los rellena PocketBase solo.
     """
@@ -519,9 +514,9 @@ def sync_to_pocketbase(bookings):
     apuntar_sync_correcto(msg_created, msg_updated, msg_skipped)
 
 
-# Marca de la ultima pasada que fue bien. La lee api/sync_estado.php, que es
-# como el asistente se entera de que hace dias que no se sincroniza (lo normal
-# cuando caduca la sesion de Holidu). Va en includes/ porque el .htaccess no
+# Marca de la ultima pasada que fue bien. La sirve api/sync_estado.php, para que
+# un monitor externo pueda avisar de que hace dias que no se sincroniza (lo
+# normal cuando caduca la sesion de Holidu). Va en includes/ porque el .htaccess no
 # sirve esa carpeta.
 MARCA_SYNC = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           "includes", ".ultimo_sync.json")

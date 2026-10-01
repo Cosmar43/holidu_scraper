@@ -2,11 +2,10 @@
 /**
  * API: cuándo fue la última sincronización que salió bien.
  *
- * Existe para que el asistente pueda avisar de que hace días que no se
- * sincroniza, que es lo que pasa cuando caduca la sesión de Holidu: el cron de
- * cada 6 h sigue corriendo, falla, y el panel se queda enseñando datos viejos
- * sin que nadie se entere. Antes solo se descubría si alguien le pedía
- * sincronizar al bot.
+ * Existe para que un monitor externo pueda avisar de que hace días que no se
+ * sincroniza, que es lo que pasa cuando caduca la sesión de Holidu: el cron
+ * sigue corriendo, falla, y el panel se queda enseñando datos viejos sin que
+ * nadie se entere.
  *
  * La marca la escribe sync_holidu_pocketbase.py al terminar bien
  * (includes/.ultimo_sync.json). Es de solo lectura, así que no pide CSRF.
@@ -14,7 +13,7 @@
 require_once __DIR__ . '/../includes/env.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-// Igual que sync.php: el agente vive en otro contenedor y no tiene sesión.
+// Igual que sync.php: acepta la clave AGENTE_API_KEY en vez de sesión.
 $claveAgente = getenv('AGENTE_API_KEY');
 $claveRecibida = $_SERVER['HTTP_X_API_KEY'] ?? '';
 $esAgente = !empty($claveAgente) && hash_equals($claveAgente, $claveRecibida);

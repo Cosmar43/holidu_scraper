@@ -3,10 +3,9 @@
     docker compose exec web python3 pruebas_sync.py
 
 No tocan Holidu, ni PocketBase, ni Chrome: solo llaman a funciones con datos de
-mentira. Mismo estilo que agente/app/pruebas_*.py, que tampoco usan pytest.
+mentira, sin pytest ni dependencias.
 
-Se escribieron despues de que el sync borrara importes de fianza en silencio
-(2026-08-22): cuando fallaba la peticion del detalle de una reserva, los campos
+Vigilan sobre todo un fallo que ya ocurrio: cuando fallaba la peticion del detalle de una reserva, los campos
 que solo salen de ahi se mandaban vacios en el PATCH y pisaban lo que ya estaba
 guardado. La prueba de `has_booking_changed` con claves ausentes es la que
 vigila que eso no vuelva.

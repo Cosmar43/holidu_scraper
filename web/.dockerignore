@@ -1,8 +1,9 @@
 .git
 .gitignore
+.env
 chrome_profile
 __pycache__
-*.png
 *.md
-docker-compose.yml
-guia-git.png
+includes/.tokens.php
+includes/.fallos.php
+includes/.ultimo_sync.json

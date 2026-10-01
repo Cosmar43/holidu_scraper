@@ -12,13 +12,13 @@
  * 'nombre.123456@guest.booking.com' una vez y 'nombre.654321@...' la siguiente) y las reservas
  * de Airbnb llegan sin correo. El teléfono está en todas y coincide.
  *
- * ⚠️ claveHuesped() está duplicada en agente/app/notas.py, que es quien las lee
- * y escribe desde el asistente. Si cambia una, cambia la otra.
+ * ⚠️ Si otra aplicación lee o escribe estas notas (p. ej. un bot), debe usar
+ * exactamente la misma clave, o las notas anteriores dejarán de aparecer.
  */
 
 require_once __DIR__ . '/pocketbase.php'; // getPocketbaseAuthToken()
 
-// Tope de una nota. El mismo que TOPE_TEXTO en agente/app/notas.py.
+// Tope de una nota.
 const NOTA_TOPE_TEXTO = 1000;
 
 /**
@@ -67,8 +67,6 @@ function notaTextoLimpio($texto) {
 
 /**
  * Identidad del huésped de una reserva: su teléfono normalizado.
- *
- * Misma regla que clave_huesped() en agente/app/notas.py.
  *
  * Sin teléfono utilizable cae a 'r:{id_reserva}': la nota se guarda igual, pero
  * solo se verá en esa reserva. Hoy no pasa en ninguna de las reservas.
@@ -140,7 +138,6 @@ function notasPorHuespedConToken($url, $token) {
  * En estos datos importa bastante, porque la mayoría de los huéspedes que
  * aparecen dos veces son una reserva cancelada y rehecha, no un retorno.
  *
- * Misma regla que _es_estancia() en agente/app/notas.py.
  */
 function esEstancia($booking, $hoy = null) {
     $hoy = $hoy ?? strtotime('today');

@@ -587,7 +587,7 @@ input[type="checkbox"] {
    tiene diez y en el movil cada columna es una linea de la tarjeta. */
 .badge-nota { background: #ede9fe; color: #5b21b6; }
 
-/* La del asistente va en azul, igual que en el historial del panel de aires. */
+/* Notas escritas por una integracion (origen 'asistente'), en azul. */
 .badge-asistente {
     background: #dbeafe;
     color: #1e40af;
