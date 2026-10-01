@@ -1,0 +1,832 @@
+/* ============================================
+   Panel de reservas de Holidu
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --primary: #0077b6;
+    --secondary: #00b4d8;
+    --dark: #03045e;
+    --success: #2a9d8f;
+    --danger: #e63946;
+    --warning: #f77f00;
+    --light: #f8f9fa;
+    --radius: 15px;
+    --shadow: 0 5px 20px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ---- LOGIN ---- */
+.login-card {
+    background: white;
+    padding: 3rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    max-width: 400px;
+    margin: 100px auto;
+    text-align: center;
+}
+
+.login-card h1 {
+    color: var(--dark);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.login-card input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s;
+}
+
+.login-card input[type="password"]:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.error {
+    color: var(--danger);
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+/* ---- BUTTONS ---- */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    width: 100%;
+    padding: 15px 30px;
+}
+
+.btn-primary:hover {
+    background: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,119,182,0.3);
+}
+
+.btn-secondary {
+    background: #9b59b6;
+    color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #8e44ad;
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background: var(--success);
+    color: white;
+}
+
+.btn-success:hover:not(:disabled) {
+    background: #238276;
+    transform: translateY(-1px);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-danger:hover {
+    background: #d62828;
+    transform: translateY(-1px);
+}
+
+.btn-logs {
+    background: #34495e;
+    color: white;
+}
+
+.btn-logs:hover:not(:disabled) {
+    background: #2c3e50;
+    transform: translateY(-1px);
+}
+
+.btn:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none !important;
+}
+
+/* ---- HEADER ---- */
+.header {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.header h1 {
+    color: var(--primary);
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ---- TABLE ---- */
+.table-container {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: var(--dark);
+    color: white;
+}
+
+th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+tbody tr {
+    transition: background 0.2s;
+}
+
+tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* ---- BADGES ---- */
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.badge-active { background: #d4edda; color: #155724; }
+.badge-cancelled { background: #f8d7da; color: #721c24; }
+.badge-confirmed { background: #d1ecf1; color: #0c5460; }
+.badge-warning { background: #fff3cd; color: #856404; }
+.badge-neutral { background: #e9ecef; color: #6c757d; }
+
+/* ---- CELDAS EDITABLES (fianza y formulario) ---- */
+/* Una insignia que además es un botón: se pulsa la propia celda para cambiar
+   el estado, sin seleccionar filas ni ir a la barra de arriba. */
+.celda-boton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+}
+
+.celda-boton:hover .badge {
+    filter: brightness(0.94);
+}
+
+.celda-boton:disabled {
+    cursor: progress;
+    opacity: 0.6;
+}
+
+.celda-detalle {
+    font-size: 0.72rem;
+    color: #6c757d;
+    margin-top: 3px;
+}
+
+/* Reserva entrada en los ultimos 7 dias: se destaca para verla de un vistazo. */
+.celda-detalle.reciente {
+    color: var(--success);
+    font-weight: 600;
+}
+
+.next-badge {
+    color: var(--success);
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.section-row {
+    background: #f0f0f0;
+    border-top: 3px solid #999;
+}
+
+.section-row td {
+    padding: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+}
+
+.row-highlight {
+    background: #e8f5e9;
+    border-left: 4px solid var(--success);
+}
+
+.row-faded {
+    opacity: 0.6;
+}
+
+/* ---- CHECKBOX ---- */
+input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary);
+}
+
+/* ---- LOADING ---- */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-overlay.active {
+    display: flex;
+}
+
+.loading-content {
+    background: white;
+    padding: 3rem;
+    border-radius: var(--radius);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 1.5rem;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ---- ALERTS ---- */
+.alert {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+.alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+/* ---- LOGS PANEL ---- */
+.logs-panel {
+    display: none;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.85rem;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: var(--shadow);
+    position: relative;
+}
+
+.logs-panel.active {
+    display: block;
+}
+
+.logs-panel pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.logs-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #cdd6f4;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.logs-close:hover {
+    opacity: 1;
+}
+
+/* ---- RESPONSIVE: Cards en movil ---- */
+@media (max-width: 900px) {
+    body { padding: 10px; }
+    
+    .header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+    }
+    
+    /* Ocultar tabla, mostrar cards */
+    .table-container table thead { display: none; }
+    
+    .table-container table,
+    .table-container table tbody,
+    .table-container table tr,
+    .table-container table td {
+        display: block;
+        width: 100%;
+    }
+    
+    .table-container table tr {
+        background: white;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 12px;
+        position: relative;
+    }
+    
+    .table-container table tr:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .table-container table td {
+        padding: 6px 12px;
+        border: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .table-container table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        min-width: 100px;
+    }
+    
+    .section-row {
+        border-radius: 8px !important;
+        margin-top: 20px !important;
+    }
+    
+    .section-row td {
+        justify-content: center;
+    }
+    
+    .section-row td::before {
+        display: none;
+    }
+    
+    .row-highlight {
+        border-left: 4px solid var(--success) !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 { font-size: 1.2rem; }
+    
+    .header-actions {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ---- REMEMBER ME ---- */
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+    justify-content: center;
+    user-select: none;
+}
+
+.remember-me input {
+    margin: 0;
+}
+
+/* ---- BOTÓN DISCRETO LOGIN HOLIDU ---- */
+.btn-holidu-mini {
+    background: transparent;
+    color: #94a3b8;
+    border: 1px solid #cbd5e1;
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s;
+    align-self: center;
+}
+.btn-holidu-mini:hover {
+    opacity: 1;
+    color: #475569;
+    border-color: #94a3b8;
+    background: #f1f5f9;
+}
+
+/* ---- MODAL LOGIN HOLIDU ---- */
+.holidu-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.holidu-overlay.active {
+    display: flex;
+}
+.holidu-modal {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+.holidu-modal h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.3rem;
+}
+.holidu-desc {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+}
+.holidu-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+.holidu-close:hover { color: #333; }
+.holidu-modal label {
+    display: block;
+    font-size: 0.85rem;
+    color: #444;
+    margin-bottom: 6px;
+}
+.holidu-modal input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+.holidu-modal .btn { width: 100%; }
+.holidu-status {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    min-height: 1.2em;
+}
+.holidu-status:empty { margin-bottom: 0; }
+.holidu-status-info { color: #2563eb; }
+.holidu-status-success { color: #16a34a; }
+.holidu-status-error { color: #dc2626; }
+
+/* ---- NOTAS DEL HUESPED ---- */
+/* Insignia en la celda del huesped, en vez de una columna propia: la tabla ya
+   tiene diez y en el movil cada columna es una linea de la tarjeta. */
+.badge-nota { background: #ede9fe; color: #5b21b6; }
+
+/* La del asistente va en azul, igual que en el historial del panel de aires. */
+.badge-asistente {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.celda-huesped {
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+/* La pista de que se puede pulsar sale solo al pasar por encima: fija, y con
+   los nombres largos partidos en varias lineas, parecia un separador de filas. */
+.celda-huesped .huesped-nombre { border-bottom: 1px dashed transparent; }
+.celda-huesped:hover .huesped-nombre { border-bottom-color: #64748b; }
+
+/* El modal de notas es mas ancho que los demas: lleva una lista, no un campo. */
+.notas-modal { max-width: 560px; }
+
+.notas-lista {
+    max-height: 40vh;
+    overflow-y: auto;
+    margin-bottom: 1.25rem;
+}
+.notas-vacio {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    margin: 0 0 0.5rem;
+}
+.notas-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    background: #f8fafc;
+}
+.notas-item-texto {
+    font-size: 0.92rem;
+    color: #1e293b;
+    white-space: pre-wrap;   /* las notas pueden llevar saltos de linea */
+    word-break: break-word;
+}
+.notas-item-pie {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 0.72rem;
+    color: #64748b;
+}
+.notas-fecha { font-weight: 600; }
+.notas-otra { font-style: italic; }
+.notas-acciones {
+    margin-left: auto;
+    display: flex;
+    gap: 4px;
+}
+/* Con .holidu-modal delante a proposito: hace falta mas especificidad que
+   '.holidu-modal .btn { width: 100% }', o los dos iconos saldrian a pantalla
+   completa uno debajo del otro. */
+.holidu-modal .notas-mini {
+    padding: 2px 7px;
+    font-size: 0.75rem;
+    width: auto;
+}
+
+/* El input de texto del modal lleva letter-spacing porque se hizo para el
+   codigo de Holidu; una nota necesita su propia regla. */
+.notas-texto {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+/* ---- SELECTOR DE VISTA ---- */
+.vista-selector {
+    display: inline-flex;
+    background: rgba(255,255,255,0.25);
+    border-radius: 999px;
+    padding: 4px;
+    margin-bottom: 1rem;
+    gap: 4px;
+}
+.vista-btn {
+    border: none;
+    background: transparent;
+    color: white;
+    font: inherit;
+    font-weight: 600;
+    padding: 0.5rem 1.2rem;
+    border-radius: 999px;
+    cursor: pointer;
+}
+.vista-btn.activa {
+    background: white;
+    color: var(--dark);
+    box-shadow: var(--shadow);
+}
+[hidden] { display: none !important; }
+
+/* ---- CALENDARIO DE OCUPACION ---- */
+.calendario-container {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+}
+.cal-cabecera {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+.cal-cabecera h2 {
+    color: var(--dark);
+    text-transform: capitalize;
+    min-width: 11rem;
+    text-align: center;
+}
+.cal-nav, .cal-hoy {
+    border: 1px solid #ddd;
+    background: var(--light);
+    border-radius: 8px;
+    cursor: pointer;
+    font: inherit;
+    padding: 0.3rem 0.8rem;
+}
+.cal-nav { font-size: 1.3rem; line-height: 1; }
+.cal-nav:hover, .cal-hoy:hover { border-color: var(--primary); }
+.cal-resumen { color: #555; margin-bottom: 1rem; }
+
+.cal-rejilla {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+}
+.cal-dsem {
+    text-align: center;
+    font-weight: 700;
+    color: #888;
+    font-size: 0.85rem;
+    padding-bottom: 0.25rem;
+}
+.cal-dia {
+    position: relative;
+    display: flex;
+    min-height: 70px;
+    border-radius: 6px;
+    background: var(--light);
+}
+.cal-fuera { background: transparent; }
+.cal-hoy-dia { outline: 2px solid var(--warning); outline-offset: -2px; }
+.cal-num {
+    position: absolute;
+    top: 3px;
+    left: 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #333;
+    z-index: 1;
+    pointer-events: none;
+}
+.cal-mitad {
+    flex: 1 1 50%;
+    position: relative;
+    min-width: 0;
+}
+.cal-mitad[data-id] { cursor: pointer; }
+.cal-mitad.izq { border-radius: 6px 0 0 6px; }
+.cal-mitad.der { border-radius: 0 6px 6px 0; }
+.cal-mitad.inicio { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
+/* Una misma estancia sigue de un dia al siguiente sin esquinas */
+.cal-mitad.izq[data-id] { border-radius: 0; }
+.cal-mitad.der[data-id]:not(.inicio) { border-radius: 0; }
+/* El nombre se sale de su mitad hacia los dias siguientes */
+.cal-mitad em {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    font-style: normal;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    /* Hasta ~2 dias de ancho: un nombre largo no se sale del calendario */
+    max-width: 380%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 2;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    pointer-events: none;
+}
+
+/* Colores por canal (tambien en la leyenda) */
+.canal-BOOKINGCOM { background: #1f6fd1; }
+.canal-AIRBNB     { background: #e8505b; }
+.canal-HOLIDU     { background: #2a9d8f; }
+.canal-OTRO       { background: #8d6cab; }
+
+.cal-leyenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #555;
+    align-items: center;
+}
+.cal-leyenda i {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 5px;
+    vertical-align: -1px;
+}
+.cal-ayuda { color: #888; font-style: italic; }
+.cal-vacio { grid-column: 1 / -1; text-align: center; color: #666; padding: 2rem; }
+
+@media (max-width: 768px) {
+    .calendario-container { padding: 0.75rem; }
+    .cal-cabecera { justify-content: center; flex-wrap: wrap; }
+    .cal-cabecera h2 { min-width: 0; font-size: 1.1rem; }
+    .cal-rejilla { gap: 2px; }
+    .cal-dia { min-height: 44px; }
+    .cal-mitad em { display: none; }
+    .cal-dia { overflow: hidden; }
+    .cal-ayuda { width: 100%; }
+}

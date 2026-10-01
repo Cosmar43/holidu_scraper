@@ -1,0 +1,40 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Nada que empiece por punto se sirve (.env, .git, ficheros de estado de
+    # includes/...). Va LO PRIMERO y en forma de regla general a proposito:
+    # bloquear ficheros de uno en uno es facil que se olvide alguno, y esta
+    # regla cubre tambien lo que se anada manana.
+    RewriteRule ^\.well-known/ - [L]
+    RewriteRule ^\. - [F,L]
+
+    # Scripts de mantenimiento: no son secretos, pero ensenan rutas internas
+    # del servidor y como se despliega. No tienen por que responder por HTTP.
+    RewriteRule ^update_web\.sh$ - [F,L]
+    RewriteRule ^hash_password\.php$ - [F,L]
+
+    # Bloquear acceso a archivos sensibles
+    RewriteRule ^\.env$ - [F,L]
+    RewriteRule ^\.gitignore$ - [F,L]
+    RewriteRule ^\.dockerignore$ - [F,L]
+    RewriteRule ^composer\.json$ - [F,L]
+    RewriteRule ^package\.json$ - [F,L]
+    RewriteRule ^requirements\.txt$ - [F,L]
+    RewriteRule ^Dockerfile$ - [F,L]
+    RewriteRule ^docker-compose\.yml$ - [F,L]
+    RewriteRule ^entrypoint\.sh$ - [F,L]
+
+    # Bloquear directorios sensibles y scripts de Python
+    RewriteRule ^chrome_profile/ - [F,L]
+    RewriteRule ^__pycache__/ - [F,L]
+    RewriteRule ^includes/ - [F,L]
+    RewriteRule \.py$ - [F,L]
+    RewriteRule ^debug_.*$ - [F,L]
+
+    # Permitir assets y api
+    RewriteRule ^assets/ - [L]
+    RewriteRule ^api/ - [L]
+</IfModule>
+
+# Proteger listado de directorios
+Options -Indexes

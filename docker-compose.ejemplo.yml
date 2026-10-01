@@ -1,0 +1,58 @@
+# Ejemplo mínimo: panel web + PocketBase.
+#   cp docker-compose.ejemplo.yml docker-compose.yml
+#   cp .env.example .env      # y rellénalo
+#   docker compose up -d --build
+#
+# El panel queda en http://<servidor>:8080. Si lo vas a abrir fuera de tu red,
+# ponlo detrás de un proxy inverso con HTTPS (la cookie de sesión no debe
+# viajar en claro).
+services:
+  pocketbase:
+    image: spectado/pocketbase:0.23.12
+    container_name: holidu-pocketbase
+    restart: unless-stopped
+    volumes:
+      - ./pocketbase_data:/pb_data
+    # Solo para entrar al admin de PocketBase y crear el superusuario. Puedes
+    # quitarlo después: el panel habla con PocketBase por la red interna.
+    ports:
+      - "8090:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80/api/health"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  web:
+    build: ./web
+    container_name: holidu-web
+    restart: unless-stopped
+    depends_on:
+      - pocketbase
+    ports:
+      - "8080:80"
+    # Chrome headless (solo se abre para iniciar o renovar la sesión de Holidu)
+    shm_size: "1gb"
+    mem_limit: 2g
+    environment:
+      - TZ=${TZ:-Europe/Madrid}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - NOMBRE_ALOJAMIENTO=${NOMBRE_ALOJAMIENTO:-Mi alojamiento}
+      - MENSAJE_FORMULARIO=${MENSAJE_FORMULARIO:-}
+      - POCKETBASE_URL=${POCKETBASE_URL:-http://pocketbase:80}
+      - POCKETBASE_ADMIN_EMAIL=${POCKETBASE_ADMIN_EMAIL}
+      - POCKETBASE_ADMIN_PASSWORD=${POCKETBASE_ADMIN_PASSWORD}
+      - HOLIDU_EMAIL=${HOLIDU_EMAIL}
+      - HOLIDU_PASSWORD=${HOLIDU_PASSWORD}
+      - AGENTE_API_KEY=${AGENTE_API_KEY:-}
+    volumes:
+      - ./web:/var/www/html
+      - chrome_profile:/var/www/html/chrome_profile
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  chrome_profile:

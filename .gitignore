@@ -1,0 +1,13 @@
+# Lista blanca: en la raíz del proyecto viven también los datos, los secretos
+# y servicios que NO van en este repositorio (.env, bases de datos, el bot...).
+# Se ignora todo y se permite solo lo que es de la web, para que nada nuevo se
+# cuele por despiste.
+/*
+!/.gitignore
+!/web/
+!/update_web.sh
+!/docker-compose.ejemplo.yml
+!/.env.example
+!/README.md
+!/LICENSE
+!/login_holidu.sh

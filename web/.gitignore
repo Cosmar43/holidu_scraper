@@ -1,0 +1,21 @@
+# Archivos privados y de sesión
+token.txt
+chrome_profile/
+.env
+guia-git.png
+includes/.tokens.php
+includes/.fallos.php
+includes/.ultimo_sync.json
+
+# Artefactos de depuración y temporales
+debug_*.png
+debug_*.html
+debug_*.py
+debug_*.json
+messages_temp.json
+*.log
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+*$py.class
