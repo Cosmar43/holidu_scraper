@@ -48,6 +48,8 @@ services:
     volumes:
       - ./web:/var/www/html
       - chrome_profile:/var/www/html/chrome_profile
+      # Cookies de la sesión de Holidu: que sobrevivan a un rebuild
+      - holidu_sesion:/var/www/.cache
     healthcheck:
       test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
       interval: 60s
@@ -56,3 +58,4 @@ services:
 
 volumes:
   chrome_profile:
+  holidu_sesion:
